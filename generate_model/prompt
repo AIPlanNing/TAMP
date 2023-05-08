@@ -1,0 +1,34 @@
+def pickup(state, x: block, robot: robot):
+    precondition:
+        (clear x) in state
+        (ontable x) in state
+        (handempty robot) in state
+    effect:
+        state = state.delete( (ontable x) ).delete( (clear x) ).delete( (handempty robot) )
+        state = state.add( (holding x robot) )
+def putdown(state, x: block, robot: robot):
+    precondition:
+        (holding x robot) in state
+    effect:
+        state = state.delete( (holding x robot) )
+        state = state.add( (clear x) ).add( (handempty robot) ).add( (ontable x) )
+def stack(state, x: block, y: block, robot: robot):
+    precondition:
+        (holding x robot) in state 
+        (clear y) in state
+    effect:
+        state = state.delete( (holding x robot) ).delete( (clear y) )
+        state = state.add( (on x y) ).add( (clear x) ).add( (handempty robot) )
+def unstack (state, x: block, y: block, robot: robot):
+    precondition:
+        (on x y) in state
+        (clear x) in state
+        (handempty robot) in state
+    effect:
+        state = state.delete( (on x y) ).delete( (clear x) ).delete( (handempty robot) )
+        state = state.add( (holding x robot) ).add( (clear y) )
+block1 = block(), block2 = block(), block3 = block(), block4 = block(), block5 = block(), robot = robot()
+s = {(ontable block1), (on block2, block1), (handempty robot), (clear block2)}
+Please find executable actions and then select one that may help reach (on block1 block2).
+executable action: 
+pickup(s, block2, robot), stack(s, block2, block1, robot)
